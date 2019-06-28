@@ -2,14 +2,16 @@
   "defaultConnection": "default",
   "connections": {
     "default": {
-      "connector": "strapi-hook-bookshelf",
       "settings": {
-        "client": "sqlite",
-        "filename": ".tmp/data.db"
+        "client": "postgres",
+        "host": "localhost",
+        "port": "5432",
+        "database": "strapi",
+        "username": "postgres",
+        "password": "123"
       },
-      "options": {
-        "useNullAsDefault": true
-      }
+      "options": {},
+      "connector": "strapi-hook-bookshelf"
     }
   }
 }
