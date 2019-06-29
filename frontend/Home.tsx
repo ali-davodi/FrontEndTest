@@ -16,11 +16,14 @@ import { NavigationScreenProp } from 'react-navigation';
 import mapStateToProps from './redux/mapState';
 import { connect } from 'react-redux';
 import Strapi from 'strapi-sdk-javascript';
-const strapi = new Strapi('http://192.168.1.5:1337');
+import { strapiUrl, strapiPort } from './statics';
 
 interface Props {
     navigation: NavigationScreenProp<any,any>
 };
+// create strapi connection
+const strapi = new Strapi(`${strapiUrl}:${strapiPort}`);
+// this function call when click on each tab of pages
 function changeTab(self: any, value: any){
     value += 1
     if(self.props.fetch_data){
@@ -30,23 +33,37 @@ function changeTab(self: any, value: any){
         })
     }
     /*self.props.dispatch(async function(dispatch:any) {
-        
     });*/
 }
+// fetch data from strapi and "pages" content
 async function fetch_data(self: any){
     const pages = await strapi.getEntries('pages');
     self.props.dispatch({ type: "FETCH_DATA", payload: pages });
-    changeTab(self, 1)
+    // set data in update state for change tab
+    changeTab(self, 0)
 }
 class Home extends Component<Props> {
-    constructor(props: any){
-        super(props);
+    // add title and right header for navigation header , and append "Update" button to header
+    static navigationOptions = ({ navigation }: any) => {
+        return {
+            title: 'Pages',
+            headerRight: (
+                <Button
+                    onPress={() =>
+                        navigation.navigate('Update')
+                    }
+                >Update</Button>
+            )
+        }
     }
     componentWillMount(){
+        // call fetch_data function , before component mount ( will mount )
         fetch_data(this)
     }
   render() {
+    // get states data from this.props ( reducer )
     const { search, update , fetch_data } = this.props;
+    // tabs header to select , show data that fetched from "pages" content
     const tabs: any[] = []
     if(fetch_data){
         fetch_data.map(function(res: any){
@@ -63,7 +80,7 @@ class Home extends Component<Props> {
                         fetch_data ?
                         fetch_data.map(function(res: any){
                             return (
-                                <View style={styles.tabstyle}>
+                                <View key={res.id} style={styles.tabstyle}>
                                     <Text style={styles.leftTextBold}>Variables : </Text>
                                     <Text style={styles.leftText}>{JSON.stringify(res.variables)}</Text>
                                     <Text style={styles.leftTextBold}>Styles : </Text>
@@ -73,11 +90,6 @@ class Home extends Component<Props> {
                         }) : ''
                     }
                 </Tabs>
-                <Button
-                    onPress={() =>
-                        this.props.navigation.navigate('Test')
-                    }
-                >Update</Button>
             </View>
             <Text style={styles.instructions}>You Select : { JSON.stringify(update) }</Text>
         </View>
