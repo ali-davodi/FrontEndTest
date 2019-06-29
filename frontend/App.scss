@@ -3,6 +3,7 @@
     justify-content: center;
     align-items: center;
     background-color: #F5FCFF;
+    padding-top: 10px;
 }
 .welcome {
     font-size: 20px;
@@ -13,4 +14,23 @@
     text-align: center;
     color: #333333;
     margin-bottom: 5px;
+}
+.tabstyle {
+    padding-left: 40px;
+    padding-right: 40px;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+    background-color: #ddd;
+}
+.flex {
+    flex: 1;
+    flex-direction: row;
+}
+.leftText {
+    text-align: left;
+}
+.leftTextBold {
+    text-align: left;
+    font-weight: bold;
 }

@@ -20,7 +20,7 @@ interface Props {
     navigation: NavigationScreenProp<any,any>
 };
 const placeSubmitHandler = (self: any, value: any) => {
-    self.props.dispatch({ type: "SEARCH", value });
+    self.props.dispatch({ type: "SEARCH", payload: value });
 }
 class Test extends Component<Props> {
     constructor(props: any){
@@ -28,7 +28,6 @@ class Test extends Component<Props> {
     }
   render() {
     const { search } = this.props;
-    console.log(this.props)
     return (
         <View style={styles.container}>
             <Text>We have no test!</Text>

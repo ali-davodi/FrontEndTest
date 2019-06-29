@@ -14,7 +14,7 @@ import AppContainer from './AppNavigator';
 import styles from "./App.scss";
 import { Provider } from 'react-redux';
 import reducer from './redux/reducer';
-import { createStore } from 'redux';
+import { applyMiddleware, createStore } from 'redux';
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -22,8 +22,9 @@ const instructions = Platform.select({
     'Double tap R on your keyboard to reload,\n' +
     'Shake or press menu button for dev menu',
 });
+const thunk = require('redux-thunk').default;
 
-const store = createStore(reducer);
+const store = createStore(reducer, {}, applyMiddleware(thunk));
 
 interface Props {}
 export default class App extends Component<Props> {
