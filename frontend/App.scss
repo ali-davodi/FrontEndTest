@@ -5,6 +5,14 @@
     background-color: #F5FCFF;
     padding-top: 10px;
 }
+.containerInner {
+    flex: 1;
+    flex-direction: column;
+}
+.rview {
+    width: 100%;
+    height: 40%;
+}
 .welcome {
     font-size: 20px;
     text-align: center;
@@ -35,4 +43,28 @@
     text-align: left;
     align-self: stretch;
     font-weight: bold;
+}
+.listview {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+.controlPanel {
+    flex: 1;
+    background-color: #326945;
+}
+.controlPanelWelcome {
+    font-size: 20px;
+    text-align: center;
+    margin: 25px;
+    color: white;
+    font-weight: bold;
+}
+.scrollView {
+    background-color: #B99BC4;
+}
+.welcome {
+    font-size: 20px;
+    text-align: center;
+    margin: 25px;
 }

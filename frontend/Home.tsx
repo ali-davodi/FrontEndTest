@@ -9,14 +9,15 @@
  */
 
 import React, {Component} from 'react';
-import {Text, View} from 'react-native';
-import {Button, Tabs} from '@ant-design/react-native';
+import {Text, View, ScrollView} from 'react-native';
+import {Button, Tabs, Icon} from '@ant-design/react-native';
 import styles from "./App.scss";
 import { NavigationScreenProp } from 'react-navigation';
 import mapStateToProps from './redux/mapState';
 import { connect } from 'react-redux';
 import Strapi from 'strapi-sdk-javascript';
 import { strapiUrl, strapiPort } from './statics';
+import { NavigationDrawer } from './NavigationDrawer';
 
 interface Props {
     navigation: NavigationScreenProp<any,any>
@@ -37,27 +38,39 @@ function changeTab(self: any, value: any){
 }
 // fetch data from strapi and "pages" content
 async function fetch_data(self: any){
-    const pages = await strapi.getEntries('pages');
+    const pages = await strapi.getEntries('pages?_sort=id:ASC');
     self.props.dispatch({ type: "FETCH_DATA", payload: pages });
     // set data in update state for change tab
     changeTab(self, 0)
 }
 class Home extends Component<Props> {
+    state = {
+        drawer: false, // drawer is closed
+    }
     // add title and right header for navigation header , and append "Update" button to header
     static navigationOptions = ({ navigation }: any) => {
+        const { params } = navigation.state;
         return {
             title: 'Pages',
+            headerLeft: <NavigationDrawer navigationProps={navigation} />,
             headerRight: (
-                <Button
-                    onPress={() =>
-                        navigation.navigate('Update')
-                    }
-                >Update</Button>
+                <React.Fragment>
+                    <Button
+                        onPress={() =>
+                            navigation.navigate('Update')
+                        }
+                    >Update</Button>
+                </React.Fragment>
             )
         }
     }
+    onButtonPress = (self: any) => {
+        self.setState({drawer: false})
+        self._drawer.close()
+    }
     componentWillMount(){
         // call fetch_data function , before component mount ( will mount )
+        this.props.navigation.setParams({props: this})
         fetch_data(this)
     }
   render() {
@@ -91,7 +104,6 @@ class Home extends Component<Props> {
                     }
                 </Tabs>
             </View>
-            <Text style={styles.instructions}>You Select : { JSON.stringify(update) }</Text>
         </View>
     );
   }
