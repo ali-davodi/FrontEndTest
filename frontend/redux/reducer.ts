@@ -1,8 +1,9 @@
-import { SEARCH, UPDATE, FETCH_DATA } from './statics'
+import { SEARCH, UPDATE, UPDATEKEY, FETCH_DATA } from './statics'
 
 const initialState = {
     search: '',
     update: {},
+    update_key: 0,
     fetch_data: []
 }
 export default function reducer(state = initialState, action: any) {
@@ -15,8 +16,13 @@ export default function reducer(state = initialState, action: any) {
       case UPDATE:
         return {
           ...state,
-          update: action.payload
+          update: action.payload,
         }
+      case UPDATEKEY:
+          return {
+            ...state,
+            update_key: action.payload,
+          }
       case FETCH_DATA:
         return {
           ...state,

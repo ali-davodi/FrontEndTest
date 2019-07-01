@@ -51,24 +51,34 @@ class Update extends Component<Props> {
     };
     save(props: any, self: any){
         let updated_data = props.update
+        let fetch_data = props.fetch_data
+        let update_key = props.update_key
         if(self.state.has_change){
             let variables = self.AnalyzeVariablesToJson(self.state.variables)
             variables = JSON.parse(variables)
             let styles = self.AnalyzeStylesToJson(self.state.styles, variables)
-            let fresh_data = {styles , variables}
-            strapi.updateEntry('pages', updated_data.id, fresh_data)
-            Alert.alert(
-                'Update successfully',
-                `${updated_data.name}`,
-                [
-                {text: 'OK', onPress: () => console.log('OK')},
-                ],
-                {cancelable: false},
-            );
+            if(styles=='}'){
+                styles = {}
+            } else {
+                styles = JSON.parse(styles)
+            }
+                let fresh_data = {styles , variables}
+                fetch_data[update_key].styles = fresh_data.styles
+                fetch_data[update_key].variables = fresh_data.variables
+                props.dispatch({ type: "FETCH_DATA", payload: fetch_data });
+                strapi.updateEntry('pages', updated_data.id, fresh_data)
+                Alert.alert(
+                    'Update successfully',
+                    `${updated_data.name}`,
+                    [
+                    {text: 'OK', onPress: () => console.log('OK')},
+                    ],
+                    {cancelable: false},
+                );
         } else {
             Alert.alert(
-                'Update successfully',
-                `${updated_data.name}`,
+                'No Changes',
+                ``,
                 [
                 {text: 'OK', onPress: () => console.log('OK')},
                 ],
@@ -95,7 +105,7 @@ class Update extends Component<Props> {
     AnalyzeStylesToJson(value: any, variables: any){
         let finalString: any = []
         let stringy = value
-        const regex = /[a-zA-Z0-9_\-#]+:{[a-zA-Z0-9_\-#]+:['a-zA-Z0-9_\-#@,:]+}/gm;
+        const regex = /[a-zA-Z0-9_\-#]+:{[a-zA-Z0-9_\-#]+:['a-zA-Z0-9_\-#@;:]+}/gm;
         let m
         while ((m = regex.exec(stringy)) !== null) {
             let targetString: string = ''
@@ -106,10 +116,10 @@ class Update extends Component<Props> {
                     if(mth[1] && mth[1].indexOf(var_key)>-1){
                         var regx = new RegExp(var_key, 'g');
                         mth[1] = mth[1].replace(regx, `'${variables[var_key]}'`)
-                        mth[1] = mth[1].replace(/:/g, '":').replace(/'/g,'"').replace(';',',')
-                        mth[1] = `{"${mth[1]}`
                     }
                 }
+                mth[1] = mth[1].replace(/:/g, '":').replace(/'/g,'"').replace(/;/g,',').replace(/",/g,'","')
+                mth[1] = `{"${mth[1]}`
                 mth[0] = `{"${mth[0]}":`
                 targetString += mth[0]+mth[1]
             });
@@ -117,7 +127,6 @@ class Update extends Component<Props> {
         }
         finalString = finalString.join()
         finalString = `${finalString.replace(/,{"/g, ',"')}}`
-        //finalString = `{${finalString.replace(/\r?\n|\r/g, '').substring(0, finalString.length-1)}}`
         return finalString
     }
     AnalyzeVariablesFromJson(value: any){

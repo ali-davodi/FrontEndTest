@@ -28,9 +28,11 @@ const strapi = new Strapi(`${strapiUrl}:${strapiPort}`);
 function changeTab(self: any, value: any){
     value += 1
     if(self.props.fetch_data){
-        self.props.fetch_data.map(function(res: any){
-            if(res.id==value)
+        self.props.fetch_data.map(function(res: any, key: number){
+            if(res.id==value){
                 self.props.dispatch({ type: "UPDATE", payload: res })
+                self.props.dispatch({ type: "UPDATE_KEY", payload: key })
+            }
         })
     }
     /*self.props.dispatch(async function(dispatch:any) {
@@ -72,6 +74,11 @@ class Home extends Component<Props> {
         // call fetch_data function , before component mount ( will mount )
         this.props.navigation.setParams({props: this})
         fetch_data(this)
+    }
+    componentDidMount(){
+        this.props.navigation.addListener('willFocus', () =>{
+            fetch_data(this)
+        })
     }
   render() {
     // get states data from this.props ( reducer )
