@@ -3,3 +3,4 @@ git rm -r --cached frontend/node_modules/
 git rm -r --cached frontend/android/
 git rm -r --cached frontend/ios/
 git rm -r --cached frontend/.jest/
+git rm -r --cached frontend/android/app/build/
