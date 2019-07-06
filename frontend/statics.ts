@@ -1,2 +1,2 @@
-export const strapiUrl  = 'http://192.168.1.4'
+export const strapiUrl  = 'http://107.173.209.248'
 export const strapiPort = '1337'
